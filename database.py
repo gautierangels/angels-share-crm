@@ -2,21 +2,19 @@ import sqlite3
 import hashlib
 from pathlib import Path
 
-# ── Chemin de stockage ───────────────────────────────────────────────────────
-# Stocké dans Documents/Angels Share Marketing Limited — synchronisé par iCloud
-APP_DIR = Path("/Users/gautiersalinier/Documents/Angels Share Marketing Limited/Angels' Share Management")
 import os
 
-# Mode cloud (Streamlit Cloud, Railway) ou local (Mac)
+# ── Chemin DB selon environnement ─────────────────────────────────────────────
 _icloud_path = Path("/Users/gautiersalinier/Documents/Angels Share Marketing Limited/Angels' Share Management/angels_share.db")
 
 if _icloud_path.exists():
-    # Mode local Mac — utiliser iCloud
-    DB_PATH = _icloud_path
+    # Local Mac
+    APP_DIR = _icloud_path.parent
+    DB_PATH  = _icloud_path
 else:
-    # Mode cloud — DB dans le dossier de l'app
-    APP_DIR.mkdir(parents=True, exist_ok=True)
-    DB_PATH = APP_DIR / "angels_share.db"
+    # Cloud — dossier courant de l'app
+    APP_DIR = Path(__file__).parent
+    DB_PATH  = APP_DIR / "angels_share.db"
 
 SCHEMA_VERSION = 6
 
