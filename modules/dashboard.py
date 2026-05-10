@@ -258,10 +258,14 @@ def render():
                 diff_str = f"{diff}j sans commande" if diff < 9999 else "Jamais commandé"
                 css = "al" if diff > 180 else "al or"
 
+                try:
+                    prods_lies = ent["producteurs_lies"] or "—"
+                except (IndexError, KeyError):
+                    prods_lies = "—"
                 st.markdown(
                     f'<div class="{css}"><b>{ent["nom"]}</b> — {ent["pays_destination"] or "—"}<br>'
                     f'<small>⏱ {diff_str} · Dernière: {last_str}<br>'
-                    f'🤝 {ent["producteurs_lies"] or "—"}</small></div>',
+                    f'🤝 {prods_lies}</small></div>',
                     unsafe_allow_html=True)
 
                 # Contact principal
@@ -277,7 +281,10 @@ def render():
                 # Producteurs liés — extraire UNIQUEMENT les noms de producteurs
                 # Format: "Maison Léda (Château Loumelat|Château Haut Selve)|Cognac Lhéraud"
                 # → ["Maison Léda", "Cognac Lhéraud"] — on ignore les marques entre parenthèses
-                prods_raw  = ent["producteurs_lies"] or ""
+                try:
+                    prods_raw = ent["producteurs_lies"] or ""
+                except (IndexError, KeyError):
+                    prods_raw = ""
                 prods_noms = []
                 depth = 0; current = ""
                 for ch in prods_raw:
