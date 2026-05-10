@@ -5,8 +5,18 @@ from pathlib import Path
 # ── Chemin de stockage ───────────────────────────────────────────────────────
 # Stocké dans Documents/Angels Share Marketing Limited — synchronisé par iCloud
 APP_DIR = Path("/Users/gautiersalinier/Documents/Angels Share Marketing Limited/Angels' Share Management")
-APP_DIR.mkdir(parents=True, exist_ok=True)
-DB_PATH = APP_DIR / "angels_share.db"
+import os
+
+# Mode cloud (Streamlit Cloud, Railway) ou local (Mac)
+_icloud_path = Path("/Users/gautiersalinier/Documents/Angels Share Marketing Limited/Angels' Share Management/angels_share.db")
+
+if _icloud_path.exists():
+    # Mode local Mac — utiliser iCloud
+    DB_PATH = _icloud_path
+else:
+    # Mode cloud — DB dans le dossier de l'app
+    APP_DIR.mkdir(parents=True, exist_ok=True)
+    DB_PATH = APP_DIR / "angels_share.db"
 
 SCHEMA_VERSION = 6
 
